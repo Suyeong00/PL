@@ -29,7 +29,7 @@ let factor_list n =
       if cnt > 0 then (h, cnt) :: factor_count num t
       else factor_count num t
     in 
-    factor_count n (prime_list n)
+    List.rev(factor_count n (prime_list n))
 
 let print_tuple tp = 
   print_string "(";

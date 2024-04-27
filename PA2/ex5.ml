@@ -55,6 +55,12 @@ let my_combination fix lst cmp lower upper = (*nC2중에서 cmp에 없는 값을
         else func (iter + 1) ((sum, ((idx lst fix), (idx lst iter))) :: result)
   in List.rev(func (fix + 1) []);;
 
+let compare a b =
+  if fst a > fst b then 1
+  else if a = b then 0
+  else -1
+
+
 let goldbach_list_limit lower upper limit =
   let plst = List.rev(prime_list upper) in
   let ul_list = under_limit plst [] 0 limit in
@@ -64,9 +70,9 @@ let goldbach_list_limit lower upper limit =
     else 
       let new_lst = my_combination i plst lst lower upper in
       func (i + 1) ((List.map (fun x -> fst x) new_lst) @ lst) (new_lst @ ans)
-  in func 0 ul_list [];;
+  in List.sort compare (func 0 ul_list []);;
 
-let testlist = List.rev(prime_list 20);;
+(* let testlist = List.rev(prime_list 20);;
 
 List.iter(fun x -> F.printf "%d " x) (testlist);;
 F.printf"\n";;
@@ -93,15 +99,19 @@ let combinations = my_combination fix lst cmp lower upper in
 F.printf"\n==============================================\ngoldbach_list_limit = ";;
 let combinations = goldbach_list_limit 100 100 100 in
   let mlst = List.map (fun x -> fst x) combinations in
-  List.iter(fun x -> F.printf "%d " x) mlst;;
+  List.iter(fun x -> F.printf "%d " x) mlst;; *)
 
 let print_tuple_list lst =
   print_string "[";
-  List.iter (fun (x, (y, z)) ->
-    Printf.printf "(%d, (%d, %d)); " x y z
-  ) lst;
-  print_string "]\n";;
-  
+  let rec print_elements lst =
+    match lst with
+    | [] -> ()
+    | [x] -> Printf.printf "(%d, (%d, %d))" (fst x) (fst (snd x)) (snd (snd x))
+    | x :: xs -> Printf.printf "(%d, (%d, %d)); " (fst x) (fst (snd x)) (snd (snd x)); print_elements xs
+  in
+  print_elements lst;
+  print_string "]\n";; 
+
 let _ = 
   print_tuple_list (goldbach_list_limit 9 20 5);
   print_tuple_list (goldbach_list_limit 25 70 10);
@@ -109,10 +119,3 @@ let _ =
   print_tuple_list (goldbach_list_limit 100 200 19);
   print_tuple_list (goldbach_list_limit 50 500 20);
   print_tuple_list (goldbach_list_limit 1 2000 50);;
-(* let _ =
-  let _ = F.printf "%d\n" (goldbach_list_limit 9 20 5) in 
-  let _ = F.printf "%d\n" (goldbach_list_limit 25 70 10) in 
-  let _ = F.printf "%d\n" (goldbach_list_limit 100 100 100) in 
-  let _ = F.printf "%d\n" (goldbach_list_limit 100 200 19) in 
-  let _ = F.printf "%d\n" (goldbach_list_limit 50 500 20) in 
-  F.printf "%d\n" (goldbach_list_limit 1 2000 50) *)

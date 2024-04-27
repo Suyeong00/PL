@@ -40,9 +40,14 @@ let print_tuple tp =
 
 let print_list lst =
   print_string "[";
-  List.iter(fun x -> print_tuple x; print_string "; ") lst;
-  print_string "]\n";;
-(*출력 포맷 수정해야 함*)
+  let rec print_elements lst =
+    match lst with
+    | [] -> ()
+    | [x] -> print_tuple x
+    | x :: xs -> print_tuple x; print_string "; "; print_elements xs
+  in
+  print_elements lst;
+  print_string "]\n";; 
 
 let _ =
   print_list (factor_list 10);
